@@ -81,7 +81,7 @@ Whitelist:
 
 ## 📁 日志文件
 
-聊天记录会自动保存到：
+聊天记录会自动保存到服务器主目录下：
 
 ```
 DeepSeekBot_conversations.log
@@ -94,6 +94,7 @@ DeepSeekBot_conversations.log
 * 请确保已正确填写 API Key
 * 建议开启白名单防止滥用 API
 * 多人同时使用时会消耗较多 API 请求
+* 本项目目前仍处于测试开发阶段，所以我在源代码中留下了我自己的SteamID白名单来进行测试，在这里特意说明避免被误会。
 
 ---
 
