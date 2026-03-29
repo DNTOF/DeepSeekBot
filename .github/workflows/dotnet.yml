@@ -13,16 +13,17 @@ jobs:
       - name: 📥 Checkout 仓库
         uses: actions/checkout@v4
 
-      - name: 🧰 设置 .NET
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: '4.8.x'
+      - name: 🧰 设置 MSBuild
+        uses: microsoft/setup-msbuild@v2
+
+      - name: 📦 安装 NuGet
+        uses: NuGet/setup-nuget@v2
 
       - name: 📦 还原依赖
         run: dotnet restore
 
       - name: 🛠 编译项目
-        run: dotnet build -c Release --no-restore
+        run: msbuild DeepSeekBot.csproj /p:Configuration=Release
 
       - name: 📂 查找 DLL
         id: find_dll
