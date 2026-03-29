@@ -1,0 +1,47 @@
+name: Build & Release DeepSeekBot
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: 📥 Checkout 仓库
+        uses: actions/checkout@v4
+
+      - name: 🧰 设置 .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '4.8.x'
+
+      - name: 📦 还原依赖
+        run: dotnet restore
+
+      - name: 🛠 编译项目
+        run: dotnet build -c Release --no-restore
+
+      - name: 📂 查找 DLL
+        id: find_dll
+        run: |
+          $dll = Get-ChildItem -Recurse -Filter "*.dll" | Where-Object { $_.Name -eq "DeepSeekBot.dll" } | Select-Object -First 1
+          echo "dll_path=$($dll.FullName)" >> $env:GITHUB_OUTPUT
+
+      - name: 🏷 获取版本号
+        id: version
+        run: |
+          $version = "v1.0.$(Get-Date -Format yyyyMMddHHmmss)"
+          echo "version=$version" >> $env:GITHUB_OUTPUT
+
+      - name: 🚀 创建 Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.version.outputs.version }}
+          name: DeepSeekBot ${{ steps.version.outputs.version }}
+          files: ${{ steps.find_dll.outputs.dll_path }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
